@@ -1,5 +1,3 @@
-2hs
-
 sequenceDiagram
   participant Browser
   participant Server
