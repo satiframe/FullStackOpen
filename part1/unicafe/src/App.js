@@ -9,30 +9,35 @@ const Button = (props) => (
 )
 
 const StatisticLine = ({text, value}) => (
-  <p>{text}: {value}</p>
+  <tr>
+    <td>{text}</td>
+    <td>{value}</td>
+  </tr>
 )
 
 const Statistics = ({good, neutral, bad}) => {
   let all = good+neutral+bad
-  let average = (good*1 + neutral*0 + bad*-1)/all
-  let positive = ((good * 100) / all)
+  let average = parseFloat(((good*1 + neutral*0 + bad*-1)/all).toFixed(1));
+  let positive = parseFloat(((good * 100) / all).toFixed(1));
 
   return (
     <>
       <h2>Statistics</h2>
 
-      {all === 0 ? (
-        <p>No feedback given</p>
-      ) : (
-        <>
-          <StatisticLine text="Good" value={good} />
-          <StatisticLine text="Neutral" value={neutral} />
-          <StatisticLine text="Bad" value={bad} />
-          <StatisticLine text="All" value={all} />
-          <StatisticLine text="Average" value={average} />
-          <StatisticLine text="Positive" value={positive} />
-        </>
-      )}
+      {all === 0 ? ( <p>No feedback given</p> ) : 
+        (
+          <table>
+            <tbody>
+              <StatisticLine text="Good" value={good} />
+              <StatisticLine text="Neutral" value={neutral} />
+              <StatisticLine text="Bad" value={bad} />
+              <StatisticLine text="All" value={all} />
+              <StatisticLine text="Average" value={average} />
+              <StatisticLine text="Positive" value={`${positive} %`} />
+            </tbody>
+          </table>
+        )
+      }
     </>
   ) 
 }
@@ -55,14 +60,15 @@ function App() {
   
   return(
     <>
+        <h1>Give feedback</h1>
 
-      <h1>Give feedback</h1>
+        <Button handleClick={() => setToGood()} text='Good' />
+        <Button handleClick={() => setToNeutral()} text='Neutral' />
+        <Button handleClick={() => setToBad()} text='Bad' />
 
-      <Button handleClick={() => setToGood()} text='good' />
-      <Button handleClick={() => setToNeutral()} text='neutral' />
-      <Button handleClick={() => setToBad()} text='bad' />
 
-      <Statistics good={good} neutral={neutral} bad={bad} />
+        <Statistics good={good} neutral={neutral} bad={bad} />
+
 
     </>
   )
