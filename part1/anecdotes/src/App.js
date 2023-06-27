@@ -1,5 +1,44 @@
 import { useState } from 'react'
 
+const NextAnecdote = ({handleAnecdote}) => {
+  return(
+    <button onClick={handleAnecdote}>
+      Next anecdote
+    </button>
+  )
+}
+
+const VoteAnecdote = ({handleVote}) => {
+  return(
+    <button onClick={handleVote}>
+      Vote
+    </button>
+  )
+}
+
+const BestAnecdote = ({allAnecdotes, allVotes}) => {
+  const mostVoted = Math.max(...allVotes)
+  const mostVotedIdex = allVotes.indexOf(mostVoted)
+  const mostVotedAnecdote = allAnecdotes[mostVotedIdex]
+
+  return(
+    <div>
+      <h2>Anecdote with most votes</h2>
+      {mostVoted === 0 ? 
+        (
+          <p>Start voting for your favorite anecdote!</p>
+        ) : (
+          <>
+            <p>{mostVotedAnecdote}</p>
+            <p>Has {mostVoted} votes</p>
+          </>
+        )
+      }
+    </div>
+  )
+}
+
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -14,26 +53,27 @@ const App = () => {
    
   const [selected, setSelected] = useState(0)
 
-  const [votes, setVotes] = useState([0,0,0,0,0,0,0,0])
+  const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
 
-  const handleVote = () => {
-    const copy = [...votes] 
-    copy[selected] += 1
-    console.log(copy)
-    setVotes(copy)
-  }
-  
-  const handleAnecdote = () => {
+  const randomAnecdotes = () => {
     const randomAnecdote = Math.floor(Math.random() * anecdotes.length);
     setSelected(randomAnecdote)
   }
 
+  const handleVote = () => {
+    const copy = [...votes] 
+    copy[selected] += 1
+    setVotes(copy)
+  }
+
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <div>{anecdotes[selected]}</div>
       <div>Has {votes[selected]} votes</div>
-      <button onClick={() => handleVote()}>Vote</button>
-      <button onClick={() => handleAnecdote()}>Next anecdote</button>
+      <VoteAnecdote handleVote={() => handleVote()} />
+      <NextAnecdote handleAnecdote={() => randomAnecdotes()}/>
+      <BestAnecdote allAnecdotes={anecdotes} allVotes={votes}  />
     </div>
   )
 }
